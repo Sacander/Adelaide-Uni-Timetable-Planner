@@ -101,7 +101,7 @@ function getClass(formattedClassString) {
         else if (counter == 8 && element.length == 5) {
             counter = 0;
             for (time of classTimes) {
-                if (time.location.includes("remote students only") && !document.getElementById("remote").checked) {
+                if (time.location.includes("offshore") && !document.getElementById("offshore").checked) {
                     push = false;
                 }
             }
@@ -119,7 +119,7 @@ function getClass(formattedClassString) {
         counter += 1;
     }
     for (time of classTimes) {
-        if (time.location.includes("remote students only") && !document.getElementById("remote").checked) {
+        if (time.location.includes("offshore") && !document.getElementById("offshore").checked) {
             push = false;
         }
     }
