@@ -1,0 +1,12 @@
+* {
+    font-family: "Verdana", "Arial", "sans-serif";
+    box-sizing: border-box;
+    font-size: 16px;
+    padding: 4px;
+    color: black;
+}
+
+/* indentation class for readability */
+.indent {
+    margin-left: 40px;
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+
+<head>
+    <title>Adelaide Uni Timetable Planner</title>
+    <script src="app.js"></script>
+    <link rel="stylesheet" href="default.css">
+</head>
+
+<body>
+
+    <!-- add course button -->
+    <div id="addCourse">
+        <input type="button" value="Add Course" onclick="addCourse()">
+    </div>
+
+    <!-- contains all courses -->
+    <div id="courses"></div>
+
+    <!-- template to add new course -->
+    <template id="courseTemplate">
+        <div class="indent">
+            <input type="text"> <input type="submit" onclick="submitCourseTimes(this)">
+        </div>
+    </template>
+
+</body>
+
+</html>
