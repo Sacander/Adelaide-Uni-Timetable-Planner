@@ -68,7 +68,6 @@ function formatClassString(string) {
 }
 
 function getClass(formattedClassString) {
-    
     const classes = [];
     let counter = 0;
     let number;
@@ -78,9 +77,8 @@ function getClass(formattedClassString) {
     let day;
     let time;
     let location;
+    let push = true;
     for (element of formattedClassString) {
-        // console.log(counter)
-        // console.log(element)
         if (counter == 0) {
             number = element;
         }
@@ -102,7 +100,16 @@ function getClass(formattedClassString) {
         }
         else if (counter == 8 && element.length == 5) {
             counter = 0;
-            classes.push(new Class(number, section, classTimes));
+            for (time of classTimes) {
+                if (time.location.includes("remote students only") && !document.getElementById("remote").checked) {
+                    push = false;
+                }
+            }
+            if (push) {
+                classes.push(new Class(number, section, classTimes));
+            }
+            push = true;
+            classTimes = [];
             number = element;
         }
         else if (counter == 8 && element.length != 5) {
@@ -111,7 +118,16 @@ function getClass(formattedClassString) {
         }
         counter += 1;
     }
+    for (time of classTimes) {
+        if (time.location.includes("remote students only") && !document.getElementById("remote").checked) {
+            push = false;
+        }
+    }
+    if (push) {
+        classes.push(new Class(number, section, classTimes));
+    }
 
+    return classes;
 }
 
 // parses course times
@@ -125,11 +141,11 @@ function submitCourseTimes(button) {
     for (string of classStrings) {
         formattedClassStrings.push(formatClassString(string));
     }
-    console.log(formattedClassStrings)
-    // const classes = [];
-    // for (string of formattedClassStrings) {
-    //     classes.push(getClass(string));
-    // }
 
-    // console.log(classes);
+    const classes = [];
+    for (string of formattedClassStrings) {
+        classes.push(getClass(string));
+    }
+
+    console.log(classes);
 }
