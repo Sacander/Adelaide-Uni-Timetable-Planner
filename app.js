@@ -205,7 +205,9 @@ function renderClasses() {
                 }
                 lessonTime.push(newTime);
             }
-            lessonClone.style.height = 50*(lessonTime[1] - lessonTime[0]) + "px";
+            lessonClone.style.height = +(50*(lessonTime[1] - lessonTime[0])-8) + "px";
+            const topOffset = 50 * (lessonTime[0] - 8);
+            lessonClone.style.top = +topOffset + "px";
 
             const day = classTime.day.toLowerCase();
             document.getElementById(day).appendChild(lessonClone);
@@ -235,6 +237,5 @@ function submitCourseTimes(button) {
         activeClasses.push(element[0]);
     }
 
-    
     renderClasses();
 }

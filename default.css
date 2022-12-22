@@ -26,4 +26,9 @@ th, td {
 /* lesson cell border */
 .lesson {
     border: 1px solid black;
+    position: relative;
+}
+
+.lessonSection {
+    vertical-align: top;
 }
