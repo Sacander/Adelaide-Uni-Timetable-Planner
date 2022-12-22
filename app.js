@@ -151,5 +151,12 @@ function submitCourseTimes(button) {
         classes.push(getClass(string));
     }
 
-    console.log(classes);
+    const myClasses = [];
+    for (element of classes) {
+        myClasses.push(element[0]);
+    }
+
+    // const subject = document.createElement("div");
+    // document.getElementById("monday").appendChild(subject);
+    console.log(myClasses)
 }
