@@ -164,29 +164,9 @@ function getClass(formattedClassString) {
     return classes;
 }
 
-// parses course times
-function submitCourseTimes(button) {
-
-    const inputString = button.previousElementSibling.value;
-    let classStrings = inputString.split("Location ");
-    classStrings.shift();
-
-    const formattedClassStrings = [];
-    for (string of classStrings) {
-        formattedClassStrings.push(formatClassString(string));
-    }
-
-    const classes = [];
-    for (string of formattedClassStrings) {
-        classes.push(getClass(string));
-    }
-
-    const myClasses = [];
-    for (element of classes) {
-        myClasses.push(element[0]);
-    }
-
-    for (lesson of myClasses) {
+// renders classes
+function renderClasses(classes) {
+    for (lesson of classes) {
         for (classTime of lesson.classTimes) {
             const lessonTemplate = document.getElementById("classTemplate");
             const lessonClone = lessonTemplate.content.firstElementChild.cloneNode(true);
@@ -212,4 +192,29 @@ function submitCourseTimes(button) {
             document.getElementById(day).appendChild(lessonClone);
         }
     }
+}
+
+// parses course times
+function submitCourseTimes(button) {
+
+    const inputString = button.previousElementSibling.value;
+    let classStrings = inputString.split("Location ");
+    classStrings.shift();
+
+    const formattedClassStrings = [];
+    for (string of classStrings) {
+        formattedClassStrings.push(formatClassString(string));
+    }
+
+    const classes = [];
+    for (string of formattedClassStrings) {
+        classes.push(getClass(string));
+    }
+
+    const myClasses = [];
+    for (element of classes) {
+        myClasses.push(element[0]);
+    }
+
+    renderClasses(myClasses);
 }
