@@ -20,12 +20,16 @@
     </div>
 
     <!-- contains all courses -->
-    <div id="courses"></div>
+    <div id="courses" class="indent">
+        <div>
+            <input type="text"> <input type="submit" onclick="submitCourseTimes(this)">
+        </div>
+    </div>
 
     <!-- template to add new course -->
     <template id="courseTemplate">
-        <div class="indent">
-            <input type="text"> <input type="submit" onclick="submitCourseTimes(this)">
+        <div>
+            <input type="text">
         </div>
     </template>
 

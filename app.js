@@ -30,7 +30,7 @@ function addDate(date) {
 function addCourse() {
     const courseTemplate = document.getElementById("courseTemplate");
     const clone = courseTemplate.content.cloneNode(true);
-    document.getElementById("courses").appendChild(clone);
+    document.getElementById("courses").prepend(clone);
 }
 
 // changes active week
