@@ -1,9 +1,11 @@
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun" ,"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const year = 2023
 
 // code to perform upon loading page
 function onLoad() {
-    addDate();
+    const date = new Date(2023, 2, 8);
+    addDate(date);
 }
 
 // adds date to timetable
@@ -19,7 +21,7 @@ function addDate(date) {
         const day = days[date.getDay()];
         const dayTitle = document.getElementById("title" + day);
         dayTitle.innerHTML = day + " " + today;
-        dayTitle.attributes.date = date;
+        dayTitle.attributes.date = new Date(date);
         date.setDate(date.getDate() - 1);
     }
 }
@@ -37,12 +39,14 @@ function prevWeek() {
     const date = titleMonday.attributes.date;
     date.setDate(date.getDate() - 7);
     addDate(date);
+    renderClasses();
 }
 function nextWeek() {
     const titleMonday = document.getElementById("titleMonday");
     const date = titleMonday.attributes.date;
     date.setDate(date.getDate() + 7);
     addDate(date);
+    renderClasses();
 }
 
 // inputs the strings split at location and returns list of sections of data
@@ -165,9 +169,24 @@ function getClass(formattedClassString) {
 }
 
 // renders classes
-function renderClasses(classes) {
-    for (lesson of classes) {
+function renderClasses() {
+    const lessons = document.getElementsByClassName("lesson");
+    while (lessons.length > 0) {
+        lessons[0].remove();
+    }
+
+    for (lesson of activeClasses) {
         for (classTime of lesson.classTimes) {
+            const date = document.getElementById("title" + classTime.day).attributes.date;
+            const today = new Date;
+            const dates = classTime.date.split(" - ");
+            const start = new Date(Date.parse(dates[0]));
+            start.setFullYear(year);
+            const end = new Date(Date.parse(dates[1]));
+            end.setFullYear(year);
+            if (date < start || date > end) {
+                continue;
+            }
             const lessonTemplate = document.getElementById("classTemplate");
             const lessonClone = lessonTemplate.content.firstElementChild.cloneNode(true);
 
@@ -195,6 +214,7 @@ function renderClasses(classes) {
 }
 
 // parses course times
+const activeClasses = [];
 function submitCourseTimes(button) {
 
     const inputString = button.previousElementSibling.value;
@@ -211,10 +231,10 @@ function submitCourseTimes(button) {
         classes.push(getClass(string));
     }
 
-    const myClasses = [];
     for (element of classes) {
-        myClasses.push(element[0]);
+        activeClasses.push(element[0]);
     }
 
-    renderClasses(myClasses);
+    
+    renderClasses();
 }
