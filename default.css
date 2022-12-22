@@ -11,12 +11,19 @@
     margin-left: 40px;
 }
 
+/* table outline */
 table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
 }
 
+/* table cell size */
 th, td {
     width: 300px;
     height: 50px;
+}
+
+/* lesson cell border */
+.lesson {
+    border: 1px solid black;
 }

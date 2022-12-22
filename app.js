@@ -85,24 +85,18 @@ function getClass(formattedClassString) {
     for (element of formattedClassString) {
         if (counter == 0) {
             number = element;
-        }
-        else if (counter == 1) {
+        } else if (counter == 1) {
             section = element;
-        }
-        else if (counter == 4) {
+        } else if (counter == 4) {
             date = element;
-        }
-        else if (counter == 5) {
+        } else if (counter == 5) {
             day = element;
-        }
-        else if (counter == 6) {
+        } else if (counter == 6) {
             time = element;
-        }
-        else if (counter == 7) {
+        } else if (counter == 7) {
             location = element;
             classTimes.push(new ClassTime(date, day, time, location));
-        }
-        else if (counter == 8 && element.length == 5) {
+        } else if (counter == 8 && element.length == 5) {
             counter = 0;
             for (time of classTimes) {
                 if (time.location.includes("offshore") && !document.getElementById("offshore").checked) {
@@ -115,8 +109,7 @@ function getClass(formattedClassString) {
             push = true;
             classTimes = [];
             number = element;
-        }
-        else if (counter == 8 && element.length != 5) {
+        } else if (counter == 8 && element.length != 5) {
             counter = 4;
             date = element;
         }
@@ -156,7 +149,30 @@ function submitCourseTimes(button) {
         myClasses.push(element[0]);
     }
 
-    // const subject = document.createElement("div");
-    // document.getElementById("monday").appendChild(subject);
-    console.log(myClasses)
+    for (lesson of myClasses) {
+        for (classTime of lesson.classTimes) {
+            const lessonTemplate = document.getElementById("classTemplate");
+            const lessonClone = lessonTemplate.content.firstElementChild.cloneNode(true);
+
+            lessonClone.children[0].innerHTML = lesson.section;
+            lessonClone.children[1].innerHTML = classTime.time;
+
+            const lessonTime = [];
+            for (time of classTime.time.split(" - ")) {
+                let newTime = +time.match(/(\d+)/)[0];
+                if (time == "12am") {
+                    newTime = 0;
+                } else if (time == "12pm") {
+                    newTime = 12;
+                } else if (time.includes("pm")) {
+                    newTime += 12;
+                }
+                lessonTime.push(newTime);
+            }
+            lessonClone.style.height = 50*(lessonTime[1] - lessonTime[0]) + "px";
+
+            const day = classTime.day.toLowerCase();
+            document.getElementById(day).appendChild(lessonClone);
+        }
+    }
 }
