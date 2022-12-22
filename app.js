@@ -1,11 +1,48 @@
-const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun" ,"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+// code to perform upon loading page
+function onLoad() {
+    addDate();
+}
+
+// adds date to timetable
+function addDate(date) {
+    if (!date) {
+        date = new Date;
+    }
+    while (date.getDay() != 5) {
+        date.setDate(date.getDate() + 1);
+    }
+    while (date.getDay() != 0) {
+        const today = String(date.getDate()) + "/" + String(date.getMonth() + 1);
+        const day = days[date.getDay()];
+        const dayTitle = document.getElementById("title" + day);
+        dayTitle.innerHTML = day + " " + today;
+        dayTitle.attributes.date = date;
+        date.setDate(date.getDate() - 1);
+    }
+}
 
 // button adds new course
 function addCourse() {
     const courseTemplate = document.getElementById("courseTemplate");
     const clone = courseTemplate.content.cloneNode(true);
     document.getElementById("courses").appendChild(clone);
+}
+
+// changes active week
+function prevWeek() {
+    const titleMonday = document.getElementById("titleMonday");
+    const date = titleMonday.attributes.date;
+    date.setDate(date.getDate() - 7);
+    addDate(date);
+}
+function nextWeek() {
+    const titleMonday = document.getElementById("titleMonday");
+    const date = titleMonday.attributes.date;
+    date.setDate(date.getDate() + 7);
+    addDate(date);
 }
 
 // inputs the strings split at location and returns list of sections of data

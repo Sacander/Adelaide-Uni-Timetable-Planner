@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="default.css">
 </head>
 
-<body>
+<body onload="onLoad()">
 
     <!-- checkbox to remove online only classes -->
     <div>
@@ -37,16 +37,22 @@
         </div>
     </template>
 
+    <!-- add week buttons -->
+    <div>
+        <input type="button" value="Prev" onclick="prevWeek()">
+        <input type="button" value="Next" onclick="nextWeek()">
+    </div>
+
     <!-- timetable viewer -->
     <div>
-        <table>
+        <table onload="addDate()">
             <tr>
                 <th>Time</th>
-                <th>Monday</th>
-                <th>Tuseday</th>
-                <th>Wednesday</th>
-                <th>Thursday</th>
-                <th>Friday</th>
+                <th id="titleMonday">Monday</th>
+                <th id="titleTuesday">Tuseday</th>
+                <th id="titleWednesday">Wednesday</th>
+                <th id="titleThursday">Thursday</th>
+                <th id="titleFriday">Friday</th>
             </tr>
             <tr>
                 <td>8am</td>
