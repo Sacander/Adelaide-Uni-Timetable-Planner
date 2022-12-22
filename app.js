@@ -104,7 +104,8 @@ class ClassTime {
 
 // object containing class data
 class Class {
-    constructor(number, section, classTimes) {
+    constructor(name, number, section, classTimes) {
+        this.name = name;
         this.number = number;
         this.section = section;
         this.classTimes = classTimes;
@@ -112,7 +113,7 @@ class Class {
 }
 
 // inputs formatted string and returns list of class objects
-function getClass(formattedClassString) {
+function getClass(formattedClassString, name) {
     const classes = [];
     let counter = 0;
     let number;
@@ -145,7 +146,7 @@ function getClass(formattedClassString) {
                 }
             }
             if (push) {
-                classes.push(new Class(number, section, classTimes));
+                classes.push(new Class(name, number, section, classTimes));
             }
             push = true;
             classTimes = [];
@@ -190,8 +191,9 @@ function renderClasses() {
             const lessonTemplate = document.getElementById("classTemplate");
             const lessonClone = lessonTemplate.content.firstElementChild.cloneNode(true);
 
-            lessonClone.children[0].innerHTML = lesson.section;
-            lessonClone.children[1].innerHTML = classTime.time;
+            lessonClone.children[0].innerHTML = lesson.name;
+            lessonClone.children[1].innerHTML = lesson.section;
+            lessonClone.children[2].innerHTML = classTime.time;
 
             const lessonTime = [];
             for (time of classTime.time.split(" - ")) {
@@ -218,8 +220,10 @@ function renderClasses() {
 // parses course times
 const activeClasses = [];
 function submitCourseTimes(button) {
+    activeClasses.length = 0;
 
     const inputString = button.previousElementSibling.value;
+    const name = button.previousElementSibling.previousElementSibling.value;
     let classStrings = inputString.split("Location ");
     classStrings.shift();
 
@@ -230,7 +234,7 @@ function submitCourseTimes(button) {
 
     const classes = [];
     for (string of formattedClassStrings) {
-        classes.push(getClass(string));
+        classes.push(getClass(string, name));
     }
 
     for (element of classes) {
@@ -239,3 +243,6 @@ function submitCourseTimes(button) {
 
     renderClasses();
 }
+
+// fix submit button
+// create array of class arrangements, shuffle and display in order
