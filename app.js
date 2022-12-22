@@ -8,23 +8,7 @@ function addCourse() {
     document.getElementById("courses").appendChild(clone);
 }
 
-class ClassTime {
-    constructor(date, day, time, location) {
-        this.date = date;
-        this.day = day;
-        this.time = time;
-        this.location = location;
-    }
-}
-
-class Class {
-    constructor(number, section, classTimes) {
-        this.number = number;
-        this.section = section;
-        this.classTimes = classTimes;
-    }
-}
-
+// inputs the strings split at location and returns list of sections of data
 function formatClassString(string) {
     let classString = string.split("\t");
 
@@ -67,6 +51,26 @@ function formatClassString(string) {
     return classString;
 }
 
+// object containing class time data
+class ClassTime {
+    constructor(date, day, time, location) {
+        this.date = date;
+        this.day = day;
+        this.time = time;
+        this.location = location;
+    }
+}
+
+// object containing class data
+class Class {
+    constructor(number, section, classTimes) {
+        this.number = number;
+        this.section = section;
+        this.classTimes = classTimes;
+    }
+}
+
+// inputs formatted string and returns list of class objects
 function getClass(formattedClassString) {
     const classes = [];
     let counter = 0;
