@@ -55,12 +55,12 @@ function formatClassString(string) {
 
     let index = 0;
     let daycount;
-    for (element of classString) {
+    for (const element of classString) {
         daycount += 1;
         if (daycount == 2) {
             let subindex = 0;
             let lastword;
-            for (word of classString[index].split(" ")) {
+            for (const word of classString[index].split(" ")) {
                 if (months.includes(word)) {
                     subindex -= lastword.length+1;
                     classString[index] = [classString[index].slice(0, subindex-1), classString[index].slice(subindex)];
@@ -82,7 +82,7 @@ function formatClassString(string) {
 
     classString = classString.flat();
     index = 0
-    for (element of classString) {
+    for (const element of classString) {
         if (element == "Section") {
             classString = classString.slice(0, index);
             break;
@@ -124,7 +124,7 @@ function getClass(formattedClassString, name) {
     let time;
     let location;
     let push = true;
-    for (element of formattedClassString) {
+    for (const element of formattedClassString) {
         if (counter == 0) {
             number = element;
         } else if (counter == 1) {
@@ -140,7 +140,7 @@ function getClass(formattedClassString, name) {
             classTimes.push(new ClassTime(date, day, time, location));
         } else if (counter == 8 && element.length == 5) {
             counter = 0;
-            for (time of classTimes) {
+            for (const time of classTimes) {
                 if (time.location.includes("offshore") && !document.getElementById("offshore").checked) {
                     push = false;
                 }
@@ -157,13 +157,13 @@ function getClass(formattedClassString, name) {
         }
         counter += 1;
     }
-    for (time of classTimes) {
+    for (const time of classTimes) {
         if (time.location.includes("offshore") && !document.getElementById("offshore").checked) {
             push = false;
         }
     }
     if (push) {
-        classes.push(new Class(number, section, classTimes));
+        classes.push(new Class(name, number, section, classTimes));
     }
 
     return classes;
@@ -176,8 +176,12 @@ function renderClasses() {
         lessons[0].remove();
     }
 
-    for (lesson of activeClasses) {
-        for (classTime of lesson.classTimes) {
+    for (const day of ["monday", "tuesday", "wednesday", "thursday", "friday"]) {
+        document.getElementById(day).attributes.usedWhitespace = 0;
+    }
+
+    for (const lesson of activeClasses) {
+        for (const classTime of lesson.classTimes) {
             const date = document.getElementById("title" + classTime.day).attributes.date;
             const today = new Date;
             const dates = classTime.date.split(" - ");
@@ -196,7 +200,7 @@ function renderClasses() {
             lessonClone.children[2].innerHTML = classTime.time;
 
             const lessonTime = [];
-            for (time of classTime.time.split(" - ")) {
+            for (const time of classTime.time.split(" - ")) {
                 let newTime = +time.match(/(\d+)/)[0];
                 if (time == "12am") {
                     newTime = 0;
@@ -207,9 +211,9 @@ function renderClasses() {
                 }
                 lessonTime.push(newTime);
             }
-            lessonClone.style.height = +(50*(lessonTime[1] - lessonTime[0])-8) + "px";
+            lessonClone.style.height = (50*(lessonTime[1] - lessonTime[0])-8) + "px";
             const topOffset = 50 * (lessonTime[0] - 8);
-            lessonClone.style.top = +topOffset + "px";
+            lessonClone.style.top = String(topOffset + 4) + "px";
 
             const day = classTime.day.toLowerCase();
             document.getElementById(day).appendChild(lessonClone);
@@ -219,30 +223,31 @@ function renderClasses() {
 
 // parses course times
 const activeClasses = [];
-function submitCourseTimes(button) {
+function submitCourseTimes() {
     activeClasses.length = 0;
 
-    const inputString = button.previousElementSibling.value;
-    const name = button.previousElementSibling.previousElementSibling.value;
-    let classStrings = inputString.split("Location ");
-    classStrings.shift();
+    for (const course of document.getElementsByClassName("input")) {
+        const name = course.children[0].value;
+        const inputString = course.children[1].value;
 
-    const formattedClassStrings = [];
-    for (string of classStrings) {
-        formattedClassStrings.push(formatClassString(string));
+        const classStrings = inputString.split("Location ");
+        classStrings.shift();
+    
+        const formattedClassStrings = [];
+        for (const string of classStrings) {
+            formattedClassStrings.push(formatClassString(string));
+        }
+        const classes = [];
+        for (const string of formattedClassStrings) {
+            classes.push(getClass(string, name));
+        }
+        for (const element of classes) {
+            activeClasses.push(element[0]);
+        }
     }
-
-    const classes = [];
-    for (string of formattedClassStrings) {
-        classes.push(getClass(string, name));
-    }
-
-    for (element of classes) {
-        activeClasses.push(element[0]);
-    }
-
+    
     renderClasses();
 }
 
-// fix submit button
+// fix multiple classes layout
 // create array of class arrangements, shuffle and display in order
