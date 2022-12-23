@@ -225,6 +225,11 @@ function renderClasses() {
     }
 }
 
+// checks if there is a clash between two class
+function checkBinaryClash(class1, class2) {
+    
+}
+
 // checks if classes clash
 function checkClash(classes) {
     const days = {
@@ -242,12 +247,16 @@ function checkClash(classes) {
     }
 
     for (const day in days) {
-        if (day.length > 1) {
-            for (const lesson of day) {
-                
+        for (let i = 0; i < day.length - 1; i++) {
+            for (let j = i + 1; j < day.length; j++) {
+                if (checkBinaryClash(day[i], day[j])) {
+                    return true;
+                }
             }
         }
     }
+
+    return false;
 }
 
 // parses course times
