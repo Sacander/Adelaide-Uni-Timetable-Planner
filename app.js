@@ -227,12 +227,19 @@ function renderClasses() {
 
 // checks if there is a clash between two class
 function checkBinaryClash(class1, class2) {
-    
+    if (class1.time.date[1] < class2.time.date[0] || class1.time.date[0] > class2.time.date[1]) {
+        return false;
+    } else if (class1.time.time[1] < class2.time.time[0] || class1.time.time[0] > class2.time.time[1]) {
+        return false;
+    } else {
+        console.log("Clash with " + class1.name + " and " +class2.name);
+        return true;
+    }
 }
 
 // checks if classes clash
 function checkClash(classes) {
-    const days = {
+    const dayList = {
         monday: [],
         tuesday: [],
         wednesday: [],
@@ -242,14 +249,14 @@ function checkClash(classes) {
 
     for (const lesson of classes) {
         for (const classTime of lesson.classTimes) {
-            days[classTime.day].push(lesson);
+            dayList[classTime.day].push({time: classTime, name: lesson.name + " " + lesson.section});
         }
     }
 
-    for (const day in days) {
-        for (let i = 0; i < day.length - 1; i++) {
-            for (let j = i + 1; j < day.length; j++) {
-                if (checkBinaryClash(day[i], day[j])) {
+    for (const day in dayList) {
+        for (let i = 0; i < dayList[day].length - 1; i++) {
+            for (let j = i + 1; j < dayList[day].length; j++) {
+                if (checkBinaryClash(dayList[day][i], dayList[day][j])) {
                     return true;
                 }
             }
@@ -263,6 +270,7 @@ function checkClash(classes) {
 const activeClasses = [];
 function submitCourseTimes() {
     activeClasses.length = 0;
+    const subjectClasses = []
 
     for (const course of document.getElementsByClassName("input")) {
         const name = course.children[0].value;
@@ -280,9 +288,12 @@ function submitCourseTimes() {
         for (const string of formattedClassStrings) {
             classes.push(getClass(string, name));
         }
+        subjectClasses.push(classes);
+    }
 
-        console.log(classes)
-        for (const element of classes) {
+    console.log(checkClash([subjectClasses[0][0][0], subjectClasses[1][0][0]]))
+    for (const subject of subjectClasses) {
+        for (const element of subject) {
             activeClasses.push(element[0]);
         }
     }
