@@ -19,7 +19,7 @@ function addDate(date) {
     while (date.getDay() != 0) {
         const today = String(date.getDate()) + "/" + String(date.getMonth() + 1);
         const day = days[date.getDay()];
-        const dayTitle = document.getElementById("title" + day);
+        const dayTitle = document.getElementById(day.toLowerCase() + "Title");
         dayTitle.innerHTML = day + " " + today;
         dayTitle.attributes.date = new Date(date);
         date.setDate(date.getDate() - 1);
@@ -35,14 +35,14 @@ function addCourse() {
 
 // changes active week
 function prevWeek() {
-    const titleMonday = document.getElementById("titleMonday");
+    const titleMonday = document.getElementById("mondayTitle");
     const date = titleMonday.attributes.date;
     date.setDate(date.getDate() - 7);
     addDate(date);
     renderClasses();
 }
 function nextWeek() {
-    const titleMonday = document.getElementById("titleMonday");
+    const titleMonday = document.getElementById("mondayTitle");
     const date = titleMonday.attributes.date;
     date.setDate(date.getDate() + 7);
     addDate(date);
@@ -132,7 +132,7 @@ function getClass(formattedClassString, name) {
         } else if (counter == 4) {
             date = element;
         } else if (counter == 5) {
-            day = element;
+            day = element.toLowerCase();
         } else if (counter == 6) {
             time = element;
         } else if (counter == 7) {
@@ -176,9 +176,10 @@ function renderClasses() {
         lessons[0].remove();
     }
 
+
     for (const lesson of activeClasses) {
         for (const classTime of lesson.classTimes) {
-            const date = document.getElementById("title" + classTime.day).attributes.date;
+            const date = document.getElementById(classTime.day + "Title").attributes.date;
             const today = new Date;
             const dates = classTime.date.split(" - ");
             const start = new Date(Date.parse(dates[0]));
@@ -211,8 +212,7 @@ function renderClasses() {
             const topOffset = 50 * (lessonTime[0] - 8);
             lessonClone.style.top = String(topOffset + 4) + "px";
 
-            const day = classTime.day.toLowerCase();
-            document.getElementById(day).appendChild(lessonClone);
+            document.getElementById(classTime.day).appendChild(lessonClone);
         }
     }
 }
@@ -229,7 +229,7 @@ function checkClash(classes) {
 
     for (const lesson of classes) {
         for (const classTime of lesson.classTimes) {
-            days[classTime.day.toLowerCase()].push(lesson);
+            days[classTime.day].push(lesson);
         }
     }
 
