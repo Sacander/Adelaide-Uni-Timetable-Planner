@@ -1,6 +1,6 @@
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun" ,"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const year = 2023
+let year = 2023;
 
 // code to perform upon loading page
 function onLoad() {
@@ -24,6 +24,11 @@ function addDate(date) {
         dayTitle.attributes.date = new Date(date);
         date.setDate(date.getDate() - 1);
     }
+}
+
+// updates year when changed
+function updateYear(input) {
+    year = input.value;
 }
 
 // button adds new course
@@ -276,5 +281,4 @@ function submitCourseTimes() {
     renderClasses();
 }
 
-// add year form
 // create array of class arrangements, shuffle and display in order
