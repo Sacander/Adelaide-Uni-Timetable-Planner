@@ -337,4 +337,5 @@ function shuffleArray(array) {
     return array;
   }
 
-// create array of class arrangements, shuffle and display in order
+// add selection for other possible timetables
+// allow savinig/uploading of timetable
