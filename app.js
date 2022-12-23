@@ -121,7 +121,7 @@ function getClass(formattedClassString, name) {
     let classTimes = [];
     let date;
     let day;
-    let time;
+    let time = [];
     let location;
     let push = true;
     for (const element of formattedClassString) {
@@ -134,14 +134,25 @@ function getClass(formattedClassString, name) {
         } else if (counter == 5) {
             day = element.toLowerCase();
         } else if (counter == 6) {
-            time = element;
+            for (const timePart of element.split(" - ")) {
+                let newTimePart = +timePart.match(/(\d+)/)[0];
+                if (timePart == "12am") {
+                    newTimePart = 0;
+                } else if (timePart == "12pm") {
+                    newTimePart = 12;
+                } else if (timePart.includes("pm")) {
+                    newTimePart += 12;
+                }
+                time.push(newTimePart);
+            }
+            time.push(element);
         } else if (counter == 7) {
             location = element;
             classTimes.push(new ClassTime(date, day, time, location));
         } else if (counter == 8 && element.length == 5) {
             counter = 0;
-            for (const time of classTimes) {
-                if (time.location.includes("offshore") && !document.getElementById("offshore").checked) {
+            for (const classTime of classTimes) {
+                if (classTime.location.includes("offshore") && !document.getElementById("offshore").checked) {
                     push = false;
                 }
             }
@@ -157,8 +168,8 @@ function getClass(formattedClassString, name) {
         }
         counter += 1;
     }
-    for (const time of classTimes) {
-        if (time.location.includes("offshore") && !document.getElementById("offshore").checked) {
+    for (const classTime of classTimes) {
+        if (classTime.location.includes("offshore") && !document.getElementById("offshore").checked) {
             push = false;
         }
     }
@@ -180,7 +191,6 @@ function renderClasses() {
     for (const lesson of activeClasses) {
         for (const classTime of lesson.classTimes) {
             const date = document.getElementById(classTime.day + "Title").attributes.date;
-            const today = new Date;
             const dates = classTime.date.split(" - ");
             const start = new Date(Date.parse(dates[0]));
             start.setFullYear(year);
@@ -194,22 +204,22 @@ function renderClasses() {
 
             lessonClone.children[0].innerHTML = lesson.name;
             lessonClone.children[1].innerHTML = lesson.section;
-            lessonClone.children[2].innerHTML = classTime.time;
+            lessonClone.children[2].innerHTML = classTime.time[2];
 
-            const lessonTime = [];
-            for (const time of classTime.time.split(" - ")) {
-                let newTime = +time.match(/(\d+)/)[0];
-                if (time == "12am") {
-                    newTime = 0;
-                } else if (time == "12pm") {
-                    newTime = 12;
-                } else if (time.includes("pm")) {
-                    newTime += 12;
-                }
-                lessonTime.push(newTime);
-            }
-            lessonClone.style.height = (50*(lessonTime[1] - lessonTime[0])-8) + "px";
-            const topOffset = 50 * (lessonTime[0] - 8);
+            // const lessonTime = [];
+            // for (const time of classTime.time.split(" - ")) {
+            //     let newTime = +time.match(/(\d+)/)[0];
+            //     if (time == "12am") {
+            //         newTime = 0;
+            //     } else if (time == "12pm") {
+            //         newTime = 12;
+            //     } else if (time.includes("pm")) {
+            //         newTime += 12;
+            //     }
+            //     lessonTime.push(newTime);
+            // }
+            lessonClone.style.height = (50*(classTime.time[1] - classTime.time[0])-8) + "px";
+            const topOffset = 50 * (classTime.time[0] - 8);
             lessonClone.style.top = String(topOffset + 4) + "px";
 
             document.getElementById(classTime.day).appendChild(lessonClone);
