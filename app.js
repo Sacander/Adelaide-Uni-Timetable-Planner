@@ -121,7 +121,7 @@ function getClass(formattedClassString, name) {
     let classTimes = [];
     let date;
     let day;
-    let time = [];
+    let time = []; // time will contain start time (24hr), end time (24hr), and string time
     let location;
     let push = true;
     for (const element of formattedClassString) {
@@ -149,6 +149,7 @@ function getClass(formattedClassString, name) {
         } else if (counter == 7) {
             location = element;
             classTimes.push(new ClassTime(date, day, time, location));
+            time = [];
         } else if (counter == 8 && element.length == 5) {
             counter = 0;
             for (const classTime of classTimes) {
