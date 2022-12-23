@@ -176,10 +176,6 @@ function renderClasses() {
         lessons[0].remove();
     }
 
-    for (const day of ["monday", "tuesday", "wednesday", "thursday", "friday"]) {
-        document.getElementById(day).attributes.usedWhitespace = 0;
-    }
-
     for (const lesson of activeClasses) {
         for (const classTime of lesson.classTimes) {
             const date = document.getElementById("title" + classTime.day).attributes.date;
@@ -221,6 +217,31 @@ function renderClasses() {
     }
 }
 
+// checks if classes clash
+function checkClash(classes) {
+    const days = {
+        monday: [],
+        tuesday: [],
+        wednesday: [],
+        thursday: [],
+        friday: []
+    }
+
+    for (const lesson of classes) {
+        for (const classTime of lesson.classTimes) {
+            days[classTime.day.toLowerCase()].push(lesson);
+        }
+    }
+
+    for (const day in days) {
+        if (day.length > 1) {
+            for (const lesson of day) {
+                
+            }
+        }
+    }
+}
+
 // parses course times
 const activeClasses = [];
 function submitCourseTimes() {
@@ -237,10 +258,13 @@ function submitCourseTimes() {
         for (const string of classStrings) {
             formattedClassStrings.push(formatClassString(string));
         }
+
         const classes = [];
         for (const string of formattedClassStrings) {
             classes.push(getClass(string, name));
         }
+
+        console.log(classes)
         for (const element of classes) {
             activeClasses.push(element[0]);
         }
@@ -249,5 +273,5 @@ function submitCourseTimes() {
     renderClasses();
 }
 
-// fix multiple classes layout
+// add year form
 // create array of class arrangements, shuffle and display in order
