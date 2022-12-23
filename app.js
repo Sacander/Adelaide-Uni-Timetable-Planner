@@ -229,7 +229,7 @@ function renderClasses() {
 function checkBinaryClash(class1, class2) {
     if (class1.time.date[1] < class2.time.date[0] || class1.time.date[0] > class2.time.date[1]) {
         return false;
-    } else if (class1.time.time[1] < class2.time.time[0] || class1.time.time[0] > class2.time.time[1]) {
+    } else if (class1.time.time[1] <= class2.time.time[0] || class1.time.time[0] >= class2.time.time[1]) {
         return false;
     } else {
         console.log("Clash with " + class1.name + " and " +class2.name);
@@ -267,10 +267,10 @@ function checkClash(classes) {
 }
 
 // parses course times
-const activeClasses = [];
+let activeClasses = [];
 function submitCourseTimes() {
-    activeClasses.length = 0;
-    const subjectClasses = []
+    activeClasses = [];
+    const classes = [];
 
     for (const course of document.getElementsByClassName("input")) {
         const name = course.children[0].value;
@@ -284,21 +284,57 @@ function submitCourseTimes() {
             formattedClassStrings.push(formatClassString(string));
         }
 
-        const classes = [];
         for (const string of formattedClassStrings) {
             classes.push(getClass(string, name));
         }
-        subjectClasses.push(classes);
     }
 
-    console.log(checkClash([subjectClasses[0][0][0], subjectClasses[1][0][0]]))
-    for (const subject of subjectClasses) {
-        for (const element of subject) {
-            activeClasses.push(element[0]);
-        }
+    let possibleClassCombinations = [];
+    
+
+    const indices = [];
+    for (const classType of classes) {
+        indices.push(classType.length - 1);
     }
+    const maxIndex = indices.length - 1;
+    let incomplete = true;
+    while (incomplete) {
+        const classCombination = [];
+        for (let i = 0; i < classes.length; i++) {
+            classCombination.push(classes[i][indices[i]]);
+        }
+        if (!checkClash(classCombination)) {
+            possibleClassCombinations.push(classCombination);
+        }
+
+        function updateIndices(index) {
+            indices[index] -= 1;
+            if (indices[index] < 0) {
+                indices[index] = classes[index].length - 1;
+                if (index != 0) {
+                    updateIndices(index - 1);
+                } else {
+                    incomplete = false;
+                }
+            }
+        }
+        updateIndices(maxIndex);
+    }
+    possibleClassCombinations = shuffleArray(possibleClassCombinations);
+    activeClasses = activeClasses.concat(possibleClassCombinations[0]);
     
     renderClasses();
 }
+
+// shuffles array
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+    return array;
+  }
 
 // create array of class arrangements, shuffle and display in order
