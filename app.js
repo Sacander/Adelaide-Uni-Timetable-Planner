@@ -31,6 +31,13 @@ function updateYear(input) {
     year = input.value;
 }
 
+// button adds new restriction
+function addRestriction() {
+    const courseTemplate = document.getElementById("restrictionTemplate");
+    const clone = courseTemplate.content.cloneNode(true);
+    document.getElementById("restrictions").append(clone);
+}
+
 // button adds new course
 function addCourse() {
     const courseTemplate = document.getElementById("courseTemplate");
@@ -243,7 +250,7 @@ function checkClash(class1, class2) {
     for (const classTime1 of class1.classTimes) {
         for (const classTime2 of class2.classTimes) {
             if (checkBinaryClash(classTime1, classTime2)) {
-                console.log("Clash with " + class1.name + " " + class1.section + " and " + class2.name + " " + class2.section);
+                // console.log("Clash with " + class1.name + " " + class1.section + " and " + class2.name + " " + class2.section);
                 return true;
             }
         }
