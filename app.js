@@ -225,44 +225,29 @@ function renderClasses() {
     }
 }
 
-// checks if there is a clash between two class
-function checkBinaryClash(class1, class2) {
-    if (class1.time.date[1] < class2.time.date[0] || class1.time.date[0] > class2.time.date[1]) {
+// checks if there is a clash between two classes
+function checkBinaryClash(classTime1, classTime2) {
+    if (classTime1.day != classTime2.day) {
         return false;
-    } else if (class1.time.time[1] <= class2.time.time[0] || class1.time.time[0] >= class2.time.time[1]) {
+    } else if (classTime1.time[1] <= classTime2.time[0] || classTime1.time[0] >= classTime2.time[1]) {
+        return false;
+    } else if (classTime1.date[1] < classTime2.date[0] || classTime1.date[0] > classTime2.date[1]) {
         return false;
     } else {
-        console.log("Clash with " + class1.name + " and " +class2.name);
         return true;
     }
 }
 
 // checks if classes clash
-function checkClash(classes) {
-    const dayList = {
-        monday: [],
-        tuesday: [],
-        wednesday: [],
-        thursday: [],
-        friday: []
-    }
-
-    for (const lesson of classes) {
-        for (const classTime of lesson.classTimes) {
-            dayList[classTime.day].push({time: classTime, name: lesson.name + " " + lesson.section});
-        }
-    }
-
-    for (const day in dayList) {
-        for (let i = 0; i < dayList[day].length - 1; i++) {
-            for (let j = i + 1; j < dayList[day].length; j++) {
-                if (checkBinaryClash(dayList[day][i], dayList[day][j])) {
-                    return true;
-                }
+function checkClash(class1, class2) {
+    for (const classTime1 of class1.classTimes) {
+        for (const classTime2 of class2.classTimes) {
+            if (checkBinaryClash(classTime1, classTime2)) {
+                console.log("Clash with " + class1.name + " " + class1.section + " and " + class2.name + " " + class2.section);
+                return true;
             }
         }
     }
-
     return false;
 }
 
@@ -291,7 +276,6 @@ function submitCourseTimes() {
 
     let possibleClassCombinations = [];
     
-
     const indices = [];
     for (const classType of classes) {
         indices.push(classType.length - 1);
@@ -301,10 +285,23 @@ function submitCourseTimes() {
     while (incomplete) {
         const classCombination = [];
         for (let i = 0; i < classes.length; i++) {
-            classCombination.push(classes[i][indices[i]]);
-        }
-        if (!checkClash(classCombination)) {
-            possibleClassCombinations.push(classCombination);
+            let clash = false;
+            for (const lesson of classCombination) {
+                if (checkClash(lesson, classes[i][indices[i]])) {
+                    clash = true;
+                    break;
+                }
+            }
+            if (clash) {
+                updateIndices(i);
+                break;
+            } else {
+                classCombination.push(classes[i][indices[i]]);
+                if (classCombination.length == classes.length) {
+                    possibleClassCombinations.push(classCombination);
+                    updateIndices(maxIndex);
+                }
+            }
         }
 
         function updateIndices(index) {
@@ -318,7 +315,6 @@ function submitCourseTimes() {
                 }
             }
         }
-        updateIndices(maxIndex);
     }
     possibleClassCombinations = shuffleArray(possibleClassCombinations);
     activeClasses = activeClasses.concat(possibleClassCombinations[0]);
@@ -339,3 +335,7 @@ function shuffleArray(array) {
 
 // add selection for other possible timetables
 // allow savinig/uploading of timetable
+
+
+// hijack current system and give options 1 by 1
+// create an object which stores every class each other class clashes with
