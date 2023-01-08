@@ -258,6 +258,20 @@ function checkClash(class1, class2) {
     return false;
 }
 
+// turns restrictions into date objects
+function getRestrictions() {
+    const restrictions = [];
+    for (const restriction of document.getElementsByClassName("restriction")) {
+        const day = restriction.children[0].value;
+        let start = restriction.children[1].value.split(":");
+        start = +start[0] + (+start[1]/60);
+        let end =  restriction.children[2].value.split(":");
+        end = +end[0] + (+end[1]/60);
+        restrictions.push({day: day, start: start, end: end});
+    }
+    return restrictions;
+}
+
 // parses course times
 let activeClasses = [];
 function submitCourseTimes() {
@@ -278,6 +292,30 @@ function submitCourseTimes() {
 
         for (const string of formattedClassStrings) {
             classes.push(getClass(string, name));
+        }
+    }
+
+    // breaks function is there are no classes
+    if (classes.length == 0) {
+        return;
+    }
+
+    // remove clashes with restrictions
+    const restrictions = getRestrictions();
+    function removeRestrictions(lesson) {
+        for (const classTime of lesson.classTimes) {
+            for (const restriction of restrictions) {
+                if (restriction.day == classTime.day && (restriction.start <= classTime.time[0] < restriction.end || restriction.start < classTime.time[1] <= restriction.end)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    for (let i = 0; i < classes.length; i++) {
+        classes[i] = classes[i].filter(removeRestrictions);
+        if (classes[i].length == 0) {
+            alert("You have too many restrictions.")
         }
     }
 
@@ -340,9 +378,14 @@ function shuffleArray(array) {
     return array;
   }
 
-// add selection for other possible timetables
-// allow savinig/uploading of timetable
+// to do:
+//   add selection for other possible timetables
+//   allow savinig/uploading of timetable
 
+// if need to improve performance:
+//   hijack current system and give options 1 by 1
+//   create an object which stores every class each other class clashes with
 
-// hijack current system and give options 1 by 1
-// create an object which stores every class each other class clashes with
+// know errors:
+//   if there are no possible class combinations
+//   if there are no classes available of a class type due to restrictions
