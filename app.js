@@ -381,11 +381,12 @@ function shuffleArray(array) {
 // to do:
 //   add selection for other possible timetables
 //   allow savinig/uploading of timetable
+//   view all courses need to enroll in
+//   select which courses to include
 
 // if need to improve performance:
 //   hijack current system and give options 1 by 1
 //   create an object which stores every class each other class clashes with
 
-// know errors:
+// known errors:
 //   if there are no possible class combinations
-//   if there are no classes available of a class type due to restrictions
