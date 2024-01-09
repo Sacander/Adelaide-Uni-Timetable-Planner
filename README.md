@@ -11,4 +11,4 @@ Instructions:
 7. Press submit to keep randomly generating timetables until satisfied.
 8. Use 'Prev' and 'Next to view the timetable.
 
-![Screenshoter](timetableGenerator.png)
+![Screenshot](timetableGenerator.png)
