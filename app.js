@@ -1,10 +1,12 @@
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun" ,"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-let year = 2023;
+const today = new Date();
+let year = today.getFullYear();
 
 // code to perform upon loading page
 function onLoad() {
-    const date = new Date(2023, 2, 8);
+    document.getElementById("year").setAttribute("value", year);
+    const date = new Date(year, 2, 8);
     addDate(date);
 }
 
@@ -29,6 +31,8 @@ function addDate(date) {
 // updates year when changed
 function updateYear(input) {
     year = input.value;
+    const date = new Date(year, 2, 8);
+    addDate(date);
 }
 
 // button adds new restriction
