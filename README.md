@@ -10,3 +10,5 @@ Instructions:
 6. Enter any restrictions where no subjects should be scheduled (more restriction slots can be created with 'Add Restriction').
 7. Press submit to keep randomly generating timetables until satisfied.
 8. Use 'Prev' and 'Next to view the timetable.
+
+![Screenshoter](timetableGenerator.png)
